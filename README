@@ -1,1 +1,10 @@
 Projet réalisé par: KERVOELEN Erwann, LAO Jacques & MARIE Damien
+
+Damien :  - 05 janvier 2024
+
+    Le serveur est fonctionnel : http://localhost:8080/api/ users ou articles
+
+    CRUD pour les articles est fonctionnel : Pour tester, possibilité d'utiliser PostMan, ou bien plus simplement lancer le main et effectuer une commande dans le powershell. 
+    
+    Exemple pour ajouter un article dans l'api /api/articles : Invoke-RestMethod -Uri http://localhost:8080/api/articles -Method Post -Headers @{"Content-Type"="application/json"} -Body '{"Name": "Test article", "Quantity": 10}'
+

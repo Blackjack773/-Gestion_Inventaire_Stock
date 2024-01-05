@@ -8,6 +8,6 @@ build_property.PlatformNeutralAssembly =
 build_property.EnforceExtendedAnalyzerRules = 
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = GIS
-build_property.ProjectDir = C:\Users\damie\OneDrive\Bureau\Code\Code\C#\Gestion Inv & Stock\-Gestion_Inventaire_Stock\
+build_property.ProjectDir = C:\Users\damie\OneDrive\Bureau\Code\Code\C#\RealGestionInv&Stock\-Gestion_Inventaire_Stock\
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 

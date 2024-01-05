@@ -1,0 +1,15 @@
+C:\Users\damie\OneDrive\Bureau\Code\Code\C#\RealGestionInv&Stock\-Gestion_Inventaire_Stock\bin\Debug\net8.0\GIS.exe
+C:\Users\damie\OneDrive\Bureau\Code\Code\C#\RealGestionInv&Stock\-Gestion_Inventaire_Stock\bin\Debug\net8.0\GIS.deps.json
+C:\Users\damie\OneDrive\Bureau\Code\Code\C#\RealGestionInv&Stock\-Gestion_Inventaire_Stock\bin\Debug\net8.0\GIS.runtimeconfig.json
+C:\Users\damie\OneDrive\Bureau\Code\Code\C#\RealGestionInv&Stock\-Gestion_Inventaire_Stock\bin\Debug\net8.0\GIS.dll
+C:\Users\damie\OneDrive\Bureau\Code\Code\C#\RealGestionInv&Stock\-Gestion_Inventaire_Stock\bin\Debug\net8.0\GIS.pdb
+C:\Users\damie\OneDrive\Bureau\Code\Code\C#\RealGestionInv&Stock\-Gestion_Inventaire_Stock\obj\Debug\net8.0\GIS.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\damie\OneDrive\Bureau\Code\Code\C#\RealGestionInv&Stock\-Gestion_Inventaire_Stock\obj\Debug\net8.0\GIS.AssemblyInfoInputs.cache
+C:\Users\damie\OneDrive\Bureau\Code\Code\C#\RealGestionInv&Stock\-Gestion_Inventaire_Stock\obj\Debug\net8.0\GIS.AssemblyInfo.cs
+C:\Users\damie\OneDrive\Bureau\Code\Code\C#\RealGestionInv&Stock\-Gestion_Inventaire_Stock\obj\Debug\net8.0\GIS.csproj.CoreCompileInputs.cache
+C:\Users\damie\OneDrive\Bureau\Code\Code\C#\RealGestionInv&Stock\-Gestion_Inventaire_Stock\obj\Debug\net8.0\GIS.sourcelink.json
+C:\Users\damie\OneDrive\Bureau\Code\Code\C#\RealGestionInv&Stock\-Gestion_Inventaire_Stock\obj\Debug\net8.0\GIS.dll
+C:\Users\damie\OneDrive\Bureau\Code\Code\C#\RealGestionInv&Stock\-Gestion_Inventaire_Stock\obj\Debug\net8.0\refint\GIS.dll
+C:\Users\damie\OneDrive\Bureau\Code\Code\C#\RealGestionInv&Stock\-Gestion_Inventaire_Stock\obj\Debug\net8.0\GIS.pdb
+C:\Users\damie\OneDrive\Bureau\Code\Code\C#\RealGestionInv&Stock\-Gestion_Inventaire_Stock\obj\Debug\net8.0\GIS.genruntimeconfig.cache
+C:\Users\damie\OneDrive\Bureau\Code\Code\C#\RealGestionInv&Stock\-Gestion_Inventaire_Stock\obj\Debug\net8.0\ref\GIS.dll
