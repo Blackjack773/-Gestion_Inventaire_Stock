@@ -16,7 +16,7 @@ Damien : -06 janvier 2024
 
     J'ai ajouté les opérations CRUD pour les users. Les articles étant déjà fait hier.
 
-    Voici la liste des commandes pour tester les opérations CRUD :
+    Voici la liste des commandes powershell pour tester les opérations CRUD :
     Exemple pour les articles :  
                         - GET : 
                             Invoke-RestMethod -Uri http://localhost:8080/api/articles -Method Get
