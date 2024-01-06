@@ -1,4 +1,4 @@
-﻿// Program.cs
+﻿//Main
 using System;
 
 class Program

@@ -1,6 +1,6 @@
-// DataModels.cs
 #nullable enable
 
+//Data Articles
 public class Article
 {
     public int Id { get; set; }
@@ -11,6 +11,7 @@ public class Article
     public float Price_TTC { get; set;}
 }
 
+//Data Users
 public class User
 {
     public int Id { get; set; }

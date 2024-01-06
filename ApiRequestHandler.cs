@@ -8,6 +8,8 @@ using System.Text.Json;
 //using System.Threading.Tasks;
 using MySql.Data.MySqlClient;
 
+
+//Gestion des requêtes
 public static class ApiRequestHandler
 {
     private static List<Article> articles = new List<Article>();
@@ -15,6 +17,7 @@ public static class ApiRequestHandler
 
     public static void ProcessRequest(HttpListenerContext context)
     {
+        //Appel des opé CRUD users et articles
         HttpListenerRequest request = context.Request;
         if (request != null)
         {
@@ -25,6 +28,7 @@ public static class ApiRequestHandler
             {
                 switch (requestMethod)
                 {
+                    //Data
                     case "GET":
                         if (endpoint.StartsWith("/api/articles"))
                         {
@@ -39,6 +43,7 @@ public static class ApiRequestHandler
                             SendResponse(context, HttpStatusCode.NotFound, "API users : http://localhost:8080/api/users  |||||  API articles : http://localhost:8080/api/articles");
                         }
                         break;
+                    //Ajout
                     case "POST":
                         if (endpoint.StartsWith("/api/articles"))
                         {
@@ -53,6 +58,7 @@ public static class ApiRequestHandler
                             SendResponse(context, HttpStatusCode.NotFound, "API users : http://localhost:8080/api/users  |||||  API articles : http://localhost:8080/api/articles");
                         }
                         break;
+                    //Modifier
                     case "PUT":
                         if (endpoint.StartsWith("/api/articles"))
                         {
@@ -67,6 +73,7 @@ public static class ApiRequestHandler
                             SendResponse(context, HttpStatusCode.NotFound, "API users : http://localhost:8080/api/users  |||||  API articles : http://localhost:8080/api/articles");
                         }
                         break;
+                    //Supprimer
                     case "DELETE":
                         if (endpoint.StartsWith("/api/articles"))
                         {
@@ -98,14 +105,14 @@ public static class ApiRequestHandler
         {
             if (endpoint == "/api/articles")
             {
-                // Récupérer tous les articles depuis la base de données
+                //Récupérer TOUS les articles depuis la DB
                 List<Article> articlesFromDb = GetArticlesFromDatabase(connection);
                 string articlesJson = JsonSerializer.Serialize(articlesFromDb);
                 SendResponse(context, HttpStatusCode.OK, articlesJson);
             }
             else
             {
-                // Récupérer un article spécifique depuis la base de données
+                //Récupérer article spécifique depuis la DB
                 int articleId = GetArticleIdFromEndpoint(endpoint);
                 if (articleId != -1)
                 {
@@ -133,7 +140,7 @@ public static class ApiRequestHandler
 
     private static List<Article> GetArticlesFromDatabase(MySqlConnection connection)
     {
-        // Utilise une requête SQL pour récupérer tous les articles depuis la base de données
+        //Récupérer TOUS les article via requête
         string query = "SELECT * FROM produit";
         using MySqlCommand cmd = new MySqlCommand(query, connection);
         using MySqlDataReader reader = cmd.ExecuteReader();
@@ -157,7 +164,7 @@ public static class ApiRequestHandler
 
     private static Article? GetArticleByIdFromDatabase(MySqlConnection connection, int articleId)
     {
-        // Utilise une requête SQL pour récupérer un article spécifique depuis la base de données
+        //Récupérer article spécifique de la DB via requête
         string query = "SELECT * FROM produit WHERE id_produit = @Id";
         using MySqlCommand cmd = new MySqlCommand(query, connection);
         cmd.Parameters.AddWithValue("@Id", articleId);
@@ -182,7 +189,7 @@ public static class ApiRequestHandler
     {
         if (endpoint == "/api/articles")
         {
-            // Ajouter un nouvel article à la base de données
+            //Ajout nouvel article à la DB
             Article newArticle = ParseArticleFromBody(context.Request);
             if (newArticle != null)
             {
@@ -202,18 +209,16 @@ public static class ApiRequestHandler
 
     private static void AddArticleToDatabase(MySqlConnection connection, Article article)
     {
-        // Utilise une requête SQL pour ajouter un nouvel article à la base de données
+        //Ajout nouvel article à la DB via requête
         string query = "INSERT INTO produit (prod) VALUES (@Name)";
         using MySqlCommand cmd = new MySqlCommand(query, connection);
         cmd.Parameters.AddWithValue("@Name", article.Name);
-        // Ajoute les autres paramètres en fonction de ta structure de base de données
-
         cmd.ExecuteNonQuery();
     }
 
     private static void HandlePutArticleRequest(HttpListenerContext context, string endpoint, MySqlConnection connection)
     {
-        // Mettre à jour un article existant dans la base de données
+        //Modifier un article de la DB
         int articleId = GetArticleIdFromEndpoint(endpoint);
         if (articleId != -1)
         {
@@ -244,17 +249,16 @@ public static class ApiRequestHandler
 
     private static void UpdateArticleInDatabase(MySqlConnection connection, Article existingArticle, Article updatedArticle)
     {
-        // Utilise une requête SQL pour mettre à jour un article dans la base de données
+        //Modifier un article de la DB via requête
         string query = "UPDATE produit SET prod = @Name WHERE id_produit = @Id";
         using MySqlCommand cmd = new MySqlCommand(query, connection);
         cmd.Parameters.AddWithValue("@Name", updatedArticle.Name);
         cmd.Parameters.AddWithValue("@Id", existingArticle.Id);
-    
         cmd.ExecuteNonQuery();
     }
     private static void HandleDeleteArticleRequest(HttpListenerContext context, string endpoint, MySqlConnection connection)
     {
-        // Supprimer un article de la base de données
+        //Delete article de la DB
         int articleId = GetArticleIdFromEndpoint(endpoint);
         if (articleId != -1)
         {
@@ -277,11 +281,10 @@ public static class ApiRequestHandler
     
     private static void RemoveArticleFromDatabase(MySqlConnection connection, Article existingArticle)
     {
-        // Utilise une requête SQL pour supprimer un article de la base de données
+        //Delete article de la DB via requête
         string query = "DELETE FROM produit WHERE id_produit = @Id";
         using MySqlCommand cmd = new MySqlCommand(query, connection);
         cmd.Parameters.AddWithValue("@Id", existingArticle.Id);
-
         cmd.ExecuteNonQuery();
     }
 
@@ -293,7 +296,6 @@ public static class ApiRequestHandler
         context.Response.OutputStream.Write(buffer, 0, buffer.Length);
         context.Response.Close();
     }
-
     private static string GetArticlesJson()
     {
         return JsonSerializer.Serialize(articles);
@@ -337,14 +339,14 @@ public static class ApiRequestHandler
         {
             if (endpoint == "/api/users")
             {
-                // Récupérer tous les utilisateurs depuis la base de données
+                //Récup les users de la DB
                 List<User> usersFromDb = GetUsersFromDatabase(connection);
                 string usersJson = JsonSerializer.Serialize(usersFromDb);
                 SendResponse(context, HttpStatusCode.OK, usersJson);
             }
             else
             {
-                // Récupérer un utilisateur spécifique depuis la base de données
+                //Récup user spécifique de la DB
                 int userId = GetUserIdFromEndpoint(endpoint);
                 if (userId != -1)
                 {
@@ -372,6 +374,7 @@ public static class ApiRequestHandler
 
     private static List<User> GetUsersFromDatabase(MySqlConnection connection)
     {
+        //Récup les users de la DB via requête
         string query = "SELECT * FROM client";
         using MySqlCommand cmd = new MySqlCommand(query, connection);
         using MySqlDataReader reader = cmd.ExecuteReader();
@@ -399,6 +402,7 @@ public static class ApiRequestHandler
 
     private static User? GetUserByIdFromDatabase(MySqlConnection connection, int userId)
     {
+        //Récup user spécifique de la DB via requête
         string query = "SELECT * FROM client WHERE id_client = @Id";
         using MySqlCommand cmd = new MySqlCommand(query, connection);
         cmd.Parameters.AddWithValue("@Id", userId);
@@ -427,7 +431,7 @@ public static class ApiRequestHandler
     {
         if (endpoint == "/api/users")
         {
-            // Ajouter un nouvel utilisateur à la base de données
+            //Ajout user dans la DB
             User newUser = ParseUserFromBody(context.Request);
             if (newUser != null)
             {
@@ -447,7 +451,7 @@ public static class ApiRequestHandler
 
     private static void AddUserToDatabase(MySqlConnection connection, User user)
     {
-        // Utilise une requête SQL pour ajouter un nouvel utilisateur à la base de données
+        //Ajout user dans la DB via requête
         string query = "INSERT INTO client (nom, prénom, adresse1, cp, ville, tel, mail, mdp) " +
                        "VALUES (@Name, @Surname, @Address, @Cp, @City, @Phone, @Mail, @Password)";
         using MySqlCommand cmd = new MySqlCommand(query, connection);
@@ -459,13 +463,12 @@ public static class ApiRequestHandler
         cmd.Parameters.AddWithValue("@Phone", user.Phone);
         cmd.Parameters.AddWithValue("@Mail", user.Mail);
         cmd.Parameters.AddWithValue("@Password", user.Password);
-
         cmd.ExecuteNonQuery();
     }
 
     private static void HandlePutUserRequest(HttpListenerContext context, string endpoint, MySqlConnection connection)
     {
-        // Mettre à jour un utilisateur existant dans la base de données
+        //Modifier user de la DB
         int userId = GetUserIdFromEndpoint(endpoint);
         if (userId != -1)
         {
@@ -496,7 +499,7 @@ public static class ApiRequestHandler
 
     private static void UpdateUserInDatabase(MySqlConnection connection, User existingUser, User updatedUser)
     {
-        // Utilise une requête SQL pour mettre à jour un utilisateur dans la base de données
+        //Modifier user de la DB via requête
         string query = "UPDATE client SET nom = @Name, prénom = @Surname, adresse1 = @Address, " +
                        "cp = @Cp, ville = @City, tel = @Phone, mail = @Mail, mdp = @Password " +
                        "WHERE id_client = @Id";
@@ -510,13 +513,12 @@ public static class ApiRequestHandler
         cmd.Parameters.AddWithValue("@Mail", updatedUser.Mail);
         cmd.Parameters.AddWithValue("@Password", updatedUser.Password);
         cmd.Parameters.AddWithValue("@Id", existingUser.Id);
-
         cmd.ExecuteNonQuery();
     }
 
     private static void HandleDeleteUserRequest(HttpListenerContext context, string endpoint, MySqlConnection connection)
     {
-        // Supprimer un utilisateur de la base de données
+        //Delete user de la DB
         int userId = GetUserIdFromEndpoint(endpoint);
         if (userId != -1)
         {
@@ -539,7 +541,7 @@ public static class ApiRequestHandler
 
     private static void RemoveUserFromDatabase(MySqlConnection connection, User existingUser)
     {
-        // Utilise une requête SQL pour supprimer un utilisateur de la base de données
+        //Delete user de la DB via requête
         string query = "DELETE FROM client WHERE id_client = @Id";
         using MySqlCommand cmd = new MySqlCommand(query, connection);
         cmd.Parameters.AddWithValue("@Id", existingUser.Id);
@@ -547,20 +549,20 @@ public static class ApiRequestHandler
         cmd.ExecuteNonQuery();
     }
 
-    private static string GetUsersJson()
-    {
-        // Implémente cette méthode si tu veux retourner une liste de tous les utilisateurs au format JSON
-        // return JsonSerializer.Serialize(users);
-        return "";
-    }
-
+//    private static string GetUsersJson()
+//    {
+//        return "";
+//    }
+//
     private static string GetUserJson(User user)
     {
+        //Conversion data User -> JSON
         return JsonSerializer.Serialize(user);
     }
 
     private static User? ParseUserFromBody(HttpListenerRequest request)
     {
+        //Conversion Json -> data User
         try
         {
             using (var reader = new System.IO.StreamReader(request.InputStream, request.ContentEncoding))
@@ -577,6 +579,7 @@ public static class ApiRequestHandler
 
     private static int GetUserIdFromEndpoint(string endpoint)
     {
+        //Ciblage ID par l'url (endpoint)
         string[] segments = endpoint.Split('/');
         if (segments.Length >= 3 && int.TryParse(segments[3], out int userId))
         {
