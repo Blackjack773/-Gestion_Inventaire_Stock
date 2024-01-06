@@ -4,7 +4,78 @@ Damien :  - 05 janvier 2024
 
     Le serveur est fonctionnel : http://localhost:8080/api/ users ou articles
 
-    CRUD pour les articles est fonctionnel : Pour tester, possibilité d'utiliser PostMan, ou bien plus simplement lancer le main et effectuer une commande dans le powershell. 
+    Les opérations CRUD pour les articles sont fonctionnelles : Pour tester, possibilité d'utiliser PostMan, ou bien plus simplement lancer le main et effectuer une commande dans le powershell. 
     
     Exemple pour ajouter un article dans l'api /api/articles : Invoke-RestMethod -Uri http://localhost:8080/api/articles -Method Post -Headers @{"Content-Type"="application/json"} -Body '{"Name": "Test article", "Quantity": 10}'
+
+
+
+Damien : -06 janvier 2024
+
+    J'ai lié l'API /users et l'API /articles à ma bdd du projet SQL.
+
+    J'ai ajouté les opérations CRUD pour les users. Les articles étant déjà fait hier.
+
+    Voici la liste des commandes pour tester les opérations CRUD :
+    Exemple pour les articles :  
+                        - GET : 
+                            Invoke-RestMethod -Uri http://localhost:8080/api/articles -Method Get
+
+                        - POST : 
+                                $body = @{
+                                   Name = "Nouvel article"     
+                                   Quantity = 10 
+                                } | ConvertTo-Json
+
+                                Invoke-RestMethod -Uri http://localhost:8080/api/articles -Method Post   -Body     $body -ContentType "application/json"
+ 
+                        - PUT : /!\ ID à changer -> article à modifier /!\
+                                $body = @{
+                                    Name = "NouveauNom"
+                                    Quantity = 20
+                                } | ConvertTo-Json
+
+                                Invoke-RestMethod -Uri http://localhost:8080/api/articles/*ID* -Method Put -Body $body -ContentType "application/json"
+                        
+                        - DELETE : Même chose que pour le PUT -> ID à changer
+                            Invoke-RestMethod -Uri http://localhost:8080/api/articles/*ID* -Method Delete
+    
+    Exemple pour les users : 
+                        - GET : 
+                            Invoke-RestMethod -Uri http://localhost:8080/api/users -Method Get
+
+                        - POST : 
+                                $body = @{
+                                    Name = "Marie"
+                                    Surname = "Damien"
+                                    Address = "87 rue de Paris"
+                                    Cp = 92000
+                                    City = "Nanterre"
+                                    Phone = 123456789
+                                    Mail = "damien.marie@ynov.com"
+                                    Password = "mdp123"
+                                } | ConvertTo-Json
+
+                                Invoke-RestMethod -Uri http://localhost:8080/api/users -Method Post -Body $body -ContentType "application/json"
+                        
+                        - PUT : /!\ ID à changer -> user à modifier /!\
+                                $body = @{
+                                    Name = "Erwann"
+                                    Surname = "Kervoelen"
+                                    Address = "150 rue de la paix"
+                                    Cp = 93000
+                                    City = "Paris"
+                                    Phone = 987654321
+                                    Mail = "erwann.kervoelen@ynov.com"
+                                    Password = "mdp321"
+                                } | ConvertTo-Json
+
+                                Invoke-RestMethod -Uri http://localhost:8080/api/users/*ID* -Method Put -Body $body -ContentType "application/json"
+                        
+                        - DELETE : Même chose que pour le PUT -> ID à changer
+                            Invoke-RestMethod -Uri http://localhost:8080/api/users/*ID* -Method Delete
+
+
+
+
 
