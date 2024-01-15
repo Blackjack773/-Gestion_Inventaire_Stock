@@ -76,6 +76,15 @@ Damien : -06 janvier 2024
                             Invoke-RestMethod -Uri http://localhost:8080/api/users/*ID* -Method Delete
 
 
+Jacques : -15 janvier 2024
+
+    La compartimentalisation a été faite.
+
+    J'ai installé Apache avec la commande ```sudo apt install apache2```
+    J'ai ensuite téléchargé la commande ufw qui permet de configurer le traffic HTTP du parre feu
+    Ensuite avec mod_mono on pourra exécuter les applications .NET
+    Par le biais de mysql server installé dans la VM on pourra se connecter sur le server.
 
 
-
+PDF : https://docs.google.com/document/d/1ZpeA2wqgzPOsui2chPwLLrE0J4dKkYEs-NNc2e1Bvq0/edit#heading=h.ngvj4pdp01xj
+Trello : https://trello.com/b/hiIj87YH/projetcsharp
