@@ -29,16 +29,16 @@ Damien : -06 janvier 2024
 
                                 Invoke-RestMethod -Uri http://localhost:8080/api/articles -Method Post   -Body     $body -ContentType "application/json"
  
-                        - PUT : /!\ ID à changer -> article à modifier /!\
+                        - PUT : /!\ ID ou NAME à changer -> article à modifier /!\
                                 $body = @{
                                     Name = "NouveauNom"
                                     Quantity = 20
                                 } | ConvertTo-Json
 
-                                Invoke-RestMethod -Uri http://localhost:8080/api/articles/*ID* -Method Put -Body $body -ContentType "application/json"
+                                Invoke-RestMethod -Uri http://localhost:8080/api/articles/*ID* ou *NAME* -Method Put -Body $body -ContentType "application/json"
                         
-                        - DELETE : Même chose que pour le PUT -> ID à changer
-                            Invoke-RestMethod -Uri http://localhost:8080/api/articles/*ID* -Method Delete
+                        - DELETE : Même chose que pour le PUT -> ID ou NAME à changer
+                            Invoke-RestMethod -Uri http://localhost:8080/api/articles/*ID* ou *NAME* -Method Delete
     
     Exemple pour les users : 
                         - GET : 
@@ -58,7 +58,7 @@ Damien : -06 janvier 2024
 
                                 Invoke-RestMethod -Uri http://localhost:8080/api/users -Method Post -Body $body -ContentType "application/json"
                         
-                        - PUT : /!\ ID à changer -> user à modifier /!\
+                        - PUT : /!\ ID ou NAME à changer -> user à modifier /!\
                                 $body = @{
                                     Name = "Erwann"
                                     Surname = "Kervoelen"
@@ -70,10 +70,10 @@ Damien : -06 janvier 2024
                                     Password = "mdp321"
                                 } | ConvertTo-Json
 
-                                Invoke-RestMethod -Uri http://localhost:8080/api/users/*ID* -Method Put -Body $body -ContentType "application/json"
+                                Invoke-RestMethod -Uri http://localhost:8080/api/users/*ID* ou *NAME* -Method Put -Body $body -ContentType "application/json"
                         
-                        - DELETE : Même chose que pour le PUT -> ID à changer
-                            Invoke-RestMethod -Uri http://localhost:8080/api/users/*ID* -Method Delete
+                        - DELETE : Même chose que pour le PUT -> ID ou NAME à changer
+                            Invoke-RestMethod -Uri http://localhost:8080/api/users/*ID* ou *NAME*  -Method Delete
 
 
 

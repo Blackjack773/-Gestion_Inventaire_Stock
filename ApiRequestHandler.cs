@@ -114,6 +114,7 @@ public static class ApiRequestHandler
             {
                 //Récupérer article spécifique depuis la DB
                 int articleId = GetArticleIdFromEndpoint(endpoint);
+                string articleName = GetArticleNameFromEndpoint(endpoint);
                 if (articleId != -1)
                 {
                     Article? article = GetArticleByIdFromDatabase(connection, articleId);
@@ -126,9 +127,21 @@ public static class ApiRequestHandler
                         SendResponse(context, HttpStatusCode.NotFound, "Article not found");
                     }
                 }
+                else if (articleName != null)
+                {
+                    Article? article = GetArticleByNameFromDatabase(connection, articleName);
+                    if (article != null)
+                    {
+                        SendResponse(context, HttpStatusCode.OK, GetArticleJson(article));
+                    }
+                    else
+                    {
+                        SendResponse(context, HttpStatusCode.NotFound, "Article not found");
+                    }
+                }
                 else
                 {
-                    SendResponse(context, HttpStatusCode.BadRequest, "No article ID");
+                    SendResponse(context, HttpStatusCode.BadRequest, "No article Name or ID");
                 }
             }
         }
@@ -138,11 +151,17 @@ public static class ApiRequestHandler
         }
     }
 
-    private static List<Article> GetArticlesFromDatabase(MySqlConnection connection)
+    private static List<Article> GetArticlesFromDatabase(MySqlConnection connection, string articleName = null)
     {
         //Récupérer TOUS les article via requête
         string query = "SELECT * FROM produit";
         using MySqlCommand cmd = new MySqlCommand(query, connection);
+
+        if (!string.IsNullOrEmpty(articleName))
+    {
+        query += " WHERE prod = @ArticleName";
+    }
+
         using MySqlDataReader reader = cmd.ExecuteReader();
 
         List<Article> articlesFromDb = new List<Article>();
@@ -168,6 +187,29 @@ public static class ApiRequestHandler
         string query = "SELECT * FROM produit WHERE id_produit = @Id";
         using MySqlCommand cmd = new MySqlCommand(query, connection);
         cmd.Parameters.AddWithValue("@Id", articleId);
+
+        using MySqlDataReader reader = cmd.ExecuteReader();
+        if (reader.Read())
+        {
+            Article article = new Article
+            {
+                Id = reader.GetInt32("id_produit"),
+                Name = reader.GetString("prod"),
+                Description = reader.GetString("description"),
+                Price_HT = reader.GetFloat("prix_ht"),
+                Price_TTC = reader.GetFloat("prix_ttc"),
+            };
+            return article;
+        }
+        return null;
+    }
+
+    private static Article? GetArticleByNameFromDatabase(MySqlConnection connection, string articleName)
+    {
+        //Récupérer article spécifique de la DB via requête
+        string query = "SELECT * FROM produit WHERE prod = @Name";
+        using MySqlCommand cmd = new MySqlCommand(query, connection);
+        cmd.Parameters.AddWithValue("@Name", articleName);
 
         using MySqlDataReader reader = cmd.ExecuteReader();
         if (reader.Read())
@@ -220,6 +262,7 @@ public static class ApiRequestHandler
     {
         //Modifier un article de la DB
         int articleId = GetArticleIdFromEndpoint(endpoint);
+        string articleName = GetArticleNameFromEndpoint(endpoint);
         if (articleId != -1)
         {
             Article? existingArticle = GetArticleByIdFromDatabase(connection, articleId);
@@ -241,9 +284,30 @@ public static class ApiRequestHandler
                 SendResponse(context, HttpStatusCode.NotFound, "Article not found");
             }
         }
+        else if (articleName != null)
+        {
+            Article? existingArticle = GetArticleByNameFromDatabase(connection, articleName);
+            if (existingArticle != null)
+            {
+                Article updatedArticle = ParseArticleFromBody(context.Request);
+                if (updatedArticle != null)
+                {
+                    UpdateArticleInDatabase(connection, existingArticle, updatedArticle);
+                    SendResponse(context, HttpStatusCode.OK, "Article mis à jour.");
+                }
+                else
+                {
+                    SendResponse(context, HttpStatusCode.BadRequest, "No article data");
+                }
+            }
+            else
+            {
+                SendResponse(context, HttpStatusCode.NotFound, "Article not found");
+            }
+        }
         else
         {
-            SendResponse(context, HttpStatusCode.BadRequest, "No article ID");
+            SendResponse(context, HttpStatusCode.BadRequest, "No article Name or ID");
         }
     }   
 
@@ -260,6 +324,7 @@ public static class ApiRequestHandler
     {
         //Delete article de la DB
         int articleId = GetArticleIdFromEndpoint(endpoint);
+        string articleName = GetArticleNameFromEndpoint(endpoint);
         if (articleId != -1)
         {
             Article? existingArticle = GetArticleByIdFromDatabase(connection, articleId);
@@ -273,9 +338,22 @@ public static class ApiRequestHandler
                 SendResponse(context, HttpStatusCode.NotFound, "Article not found");
             }
         }
+        else if (articleName != null)
+        {
+            Article? existingArticle = GetArticleByNameFromDatabase(connection, articleName);
+            if (existingArticle != null)
+            {
+                RemoveArticleFromDatabase(connection, existingArticle);
+                SendResponse(context, HttpStatusCode.OK, "Deleted.");
+            }
+            else
+            {
+                SendResponse(context, HttpStatusCode.NotFound, "Article not found");
+            }
+        }
         else
         {
-            SendResponse(context, HttpStatusCode.BadRequest, "No article ID");
+            SendResponse(context, HttpStatusCode.BadRequest, "No article Name or ID");
         }
     }
     
@@ -332,6 +410,19 @@ public static class ApiRequestHandler
         return -1;
     }
 
+    private static string GetArticleNameFromEndpoint(string endpoint)
+{
+    string[] segments = endpoint.Split('/');
+    if (segments.Length >= 4)
+    {
+        return segments[3];
+    }
+    return null;
+}
+
+
+    
+
     //Users :    
     private static void HandleGetUsersRequest(HttpListenerContext context, string endpoint, MySqlConnection connection)
     {
@@ -348,6 +439,7 @@ public static class ApiRequestHandler
             {
                 //Récup user spécifique de la DB
                 int userId = GetUserIdFromEndpoint(endpoint);
+                string userName = GetUserNameFromEndpoint(endpoint);
                 if (userId != -1)
                 {
                     User? user = GetUserByIdFromDatabase(connection, userId);
@@ -360,9 +452,21 @@ public static class ApiRequestHandler
                         SendResponse(context, HttpStatusCode.NotFound, "User not found");
                     }
                 }
+                else if (userName != null)
+                {
+                    User? user = GetUserByNameFromDatabase(connection, userName);
+                    if (user != null)
+                    {
+                        SendResponse(context, HttpStatusCode.OK, GetUserJson(user));
+                    }
+                    else
+                    {
+                        SendResponse(context, HttpStatusCode.NotFound, "User not found");
+                    }
+                }
                 else
                 {
-                    SendResponse(context, HttpStatusCode.BadRequest, "No user ID");
+                    SendResponse(context, HttpStatusCode.BadRequest, "No user Name or ID");
                 }
             }
         }
@@ -372,11 +476,17 @@ public static class ApiRequestHandler
         }
     }
 
-    private static List<User> GetUsersFromDatabase(MySqlConnection connection)
+    private static List<User> GetUsersFromDatabase(MySqlConnection connection, string userName = null)
     {
         //Récup les users de la DB via requête
         string query = "SELECT * FROM client";
         using MySqlCommand cmd = new MySqlCommand(query, connection);
+
+        if (!string.IsNullOrEmpty(userName))
+        {
+            query += " WHERE client = @UserName";
+        }
+
         using MySqlDataReader reader = cmd.ExecuteReader();
 
         List<User> usersFromDb = new List<User>();
@@ -406,6 +516,33 @@ public static class ApiRequestHandler
         string query = "SELECT * FROM client WHERE id_client = @Id";
         using MySqlCommand cmd = new MySqlCommand(query, connection);
         cmd.Parameters.AddWithValue("@Id", userId);
+
+        using MySqlDataReader reader = cmd.ExecuteReader();
+        if (reader.Read())
+        {
+            User user = new User
+            {
+                Id = reader.GetInt32("id_client"),
+                Name = reader.GetString("nom"),
+                Surname = reader.GetString("prénom"),
+                Address = reader.GetString("adresse1"),
+                Cp = reader.GetInt32("cp"),
+                City = reader.GetString("ville"),
+                Phone = reader.GetInt32("tel"),
+                Mail = reader.GetString("mail"),
+                Password = reader.GetString("mdp"),
+            };
+            return user;
+        }
+        return null;
+    }
+
+    private static User? GetUserByNameFromDatabase(MySqlConnection connection, string userName)
+    {
+        //Récup user spécifique de la DB via requête
+        string query = "SELECT * FROM client WHERE nom = @Name";
+        using MySqlCommand cmd = new MySqlCommand(query, connection);
+        cmd.Parameters.AddWithValue("@Name", userName);
 
         using MySqlDataReader reader = cmd.ExecuteReader();
         if (reader.Read())
@@ -470,6 +607,7 @@ public static class ApiRequestHandler
     {
         //Modifier user de la DB
         int userId = GetUserIdFromEndpoint(endpoint);
+        string userName = GetUserNameFromEndpoint(endpoint);
         if (userId != -1)
         {
             User? existingUser = GetUserByIdFromDatabase(connection, userId);
@@ -491,9 +629,30 @@ public static class ApiRequestHandler
                 SendResponse(context, HttpStatusCode.NotFound, "User not found");
             }
         }
+        else if (userName != null)
+        {
+            User? existingUser = GetUserByNameFromDatabase(connection, userName);
+            if (existingUser != null)
+            {
+                User updatedUser = ParseUserFromBody(context.Request);
+                if (updatedUser != null)
+                {
+                    UpdateUserInDatabase(connection, existingUser, updatedUser);
+                    SendResponse(context, HttpStatusCode.OK, "User updated");
+                }
+                else
+                {
+                    SendResponse(context, HttpStatusCode.BadRequest, "No user data");
+                }
+            }
+            else
+            {
+                SendResponse(context, HttpStatusCode.NotFound, "User not found");
+            }
+        }
         else
         {
-            SendResponse(context, HttpStatusCode.BadRequest, "No user ID");
+            SendResponse(context, HttpStatusCode.BadRequest, "No user Name or ID");
         }
     }
 
@@ -520,6 +679,7 @@ public static class ApiRequestHandler
     {
         //Delete user de la DB
         int userId = GetUserIdFromEndpoint(endpoint);
+        string userName = GetUserNameFromEndpoint(endpoint);
         if (userId != -1)
         {
             User? existingUser = GetUserByIdFromDatabase(connection, userId);
@@ -533,9 +693,22 @@ public static class ApiRequestHandler
                 SendResponse(context, HttpStatusCode.NotFound, "User not found");
             }
         }
+        else if (userId != null)
+        {
+            User? existingUser = GetUserByNameFromDatabase(connection, userName);
+            if (existingUser != null)
+            {
+                RemoveUserFromDatabase(connection, existingUser);
+                SendResponse(context, HttpStatusCode.OK, "User deleted");
+            }
+            else
+            {
+                SendResponse(context, HttpStatusCode.NotFound, "User not found");
+            }
+        }
         else
         {
-            SendResponse(context, HttpStatusCode.BadRequest, "No user ID");
+            SendResponse(context, HttpStatusCode.BadRequest, "No user name or ID");
         }
     }
 
@@ -587,5 +760,17 @@ public static class ApiRequestHandler
         }
         return -1;
     }
+
+    private static string GetUserNameFromEndpoint(string endpoint)
+{
+    //Ciblage du nom par l'url (endpoint)
+    string[] segments = endpoint.Split('/');
+    if (segments.Length >= 4)
+    {
+        return segments[3];
+    }
+    return null;
+}
+
 
 }
